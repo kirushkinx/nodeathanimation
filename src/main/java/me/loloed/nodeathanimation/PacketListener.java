@@ -8,6 +8,7 @@ import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityMetadata;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityStatus;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class PacketListener extends SimplePacketListenerAbstract {
     @Override
@@ -16,7 +17,10 @@ public class PacketListener extends SimplePacketListenerAbstract {
         Object buffer = event.getByteBuf();
         if (event.getPacketType() == PacketType.Play.Server.ENTITY_STATUS) {
             WrapperPlayServerEntityStatus packet = new WrapperPlayServerEntityStatus(event);
-            if (packet.getStatus() == 3) event.setCancelled(true);
+            if (packet.getStatus() == 3) {
+                event.setCancelled(true);
+                applyRedOverlay(player);
+            }
         } else if (event.getPacketType() == PacketType.Play.Server.ENTITY_METADATA) {
             WrapperPlayServerEntityMetadata packet = new WrapperPlayServerEntityMetadata(event);
             if (packet.getEntityId() == player.getEntityId()) return;
@@ -29,5 +33,17 @@ public class PacketListener extends SimplePacketListenerAbstract {
                 event.markForReEncode(true);
             }
         }
+    }
+
+    private void applyRedOverlay(Player player) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                removeRedOverlay(player);
+            }
+        }.runTaskLater(OsaMason.getInstance(), 12); // 12 ticks delay
+    }
+
+    private void removeRedOverlay(Player player) {
     }
 }
