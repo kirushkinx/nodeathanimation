@@ -2,12 +2,12 @@ package me.loloed.nodeathanimation;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
-import org.bukkit.plugin.java.JavaPlugin;
 
-public final class NoDeathAnimation extends JavaPlugin {
+public final class NoDeathAnimation extends OsaMason {
 
     @Override
     public void onLoad() {
+        super.onLoad();
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
         PacketEvents.getAPI().getSettings()
                 .reEncodeByDefault(false)
